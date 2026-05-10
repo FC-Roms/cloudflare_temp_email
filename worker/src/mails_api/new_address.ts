@@ -27,7 +27,7 @@ const createNewAddress = async (c: Context<HonoCustomType>) => {
     }
 
     // eslint-disable-next-line prefer-const
-    let { name, domain, cf_token, enableRandomSubdomain } = await c.req.json();
+    let { name, domain, cf_token, enableRandomSubdomain, enablePrefix } = await c.req.json();
     // check cf turnstile
     try {
         await checkCfTurnstile(c, cf_token);
@@ -52,14 +52,17 @@ const createNewAddress = async (c: Context<HonoCustomType>) => {
         console.error(error);
     }
     try {
-        const addressPrefix = await getAddressPrefix(c);
+         const shouldEnablePrefix = enablePrefix === undefined || enablePrefix === null
+            ? true
+            : getBooleanValue(enablePrefix);
+        const addressPrefix = shouldEnablePrefix ? await getAddressPrefix(c) : "";
         const sourceMeta = c.req.header('CF-Connecting-IP')
             || c.req.header('X-Forwarded-For')?.split(',')[0]?.trim()
             || c.req.header('X-Real-IP')
             || 'web:unknown';
         const res = await newAddress(c, {
             name, domain,
-            enablePrefix: true,
+            enablePrefix: shouldEnablePrefix,
             enableRandomSubdomain: getBooleanValue(enableRandomSubdomain),
             checkLengthByConfig: true,
             addressPrefix,
