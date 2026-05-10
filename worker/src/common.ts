@@ -8,7 +8,7 @@ import { CONSTANTS } from './constants';
 import { AddressCreationSettings, AdminWebhookSettings, WebhookMail, WebhookSettings } from './models';
 import i18n from './i18n';
 
-const DEFAULT_NAME_REGEX = /[^a-z0-9]/g;
+const DEFAULT_NAME_REGEX = /[^a-z0-9.-]/g;
 const DEFAULT_RANDOM_SUBDOMAIN_LENGTH = 8;
 const MAX_RANDOM_SUBDOMAIN_ATTEMPTS = 5;
 const MAX_DOMAIN_LENGTH = 253;
